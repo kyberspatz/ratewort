@@ -34,10 +34,17 @@ For more information, please refer to <https://unlicense.org>
 session_start();
 if(isset($_GET['restart'])){session_destroy();header("Location:?");exit;}
 ?>
+<head>
+	<title>Ratespiel</title>
+		<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, max-image-preview:none, notranslate" />
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-span {letter-spacing: 0.5em; }
+html {padding:1em;}
+.output {letter-spacing: 1em;padding:0em;line-height:1em;margin-bottom:-0.5em; }
+span {margin-right:0.2em;}
 </style>
-<pre>
+</head>
 <?php
 
 if(isset($_GET['generieren']) or(!is_file("Worttabelle.txt"))){
@@ -65,6 +72,8 @@ $_SESSION['gesuchtes_wort'] = trim(strtoupper($liste[mt_rand(0,count($liste)-1)]
 //echo $_SESSION['gesuchtes_wort'];
 
 $gesuchtes_wort_array = str_split($_SESSION['gesuchtes_wort']);
+$preview= '<span style="background-color:lightgreen;">'.$gesuchtes_wort_array[0].'</span><span style="background-color:lightgrey;" >-</span><span style="background-color:lightgrey;" >-</span><span style="background-color:lightgrey;" >-</span><span style="background-color:lightgrey;" >-</span>';
+
 
 if(isset($_POST['eingabe']))
 {
@@ -76,14 +85,19 @@ if(isset($_POST['eingabe']))
 	$anzahl = 0;
 	foreach($eingabe_array as $buchstabe)
 	{
-		
 		$counter++;
-		if(!in_array($buchstabe,$gesuchtes_wort_array))
+		if($buchstabe == "*")
+		{
+			$eingabe_array[$counter] = $gesuchtes_wort_array[$counter];
+			$output .=  '<span style="background-color:lightgreen;" >'.$gesuchtes_wort_array[$counter].'</span>';
+		}
+		elseif(!in_array($buchstabe,$gesuchtes_wort_array))
 		{
 			$output .=  '<span style="background-color:lightgrey;" >'.$buchstabe.'</span>';
 		}
 		else 
 		{
+			
 		if($buchstabe == $gesuchtes_wort_array[$counter])
 		{
 			//unset($gesuchtes_wort_array[$counter]);
@@ -101,17 +115,22 @@ if(isset($_POST['eingabe']))
 if(isset($gewonnen))
 {
 	echo "Wort: <b>".$_SESSION['gesuchtes_wort']."</b><br>";
-	echo "Gewonnen!<hr>"; session_destroy();exit;
+	echo 'Gewonnen!<hr>
+	<a href="?restart"><button autofocus>neues Wort</button></a>'; session_destroy();exit;
 }
 
 
 $_SESSION['output'][] =  $output;
 }
 
+echo  $preview;
+
 if(!empty($_SESSION['output'])){
+	$counter = 0;
 	foreach($_SESSION['output'] as $output)
 	{
-		echo $output."<br>";
+		$counter++;
+		echo "<p class='output'>".$output." [".$counter."]<p>";
 	}
 }
 
