@@ -40,9 +40,9 @@ if(isset($_GET['restart'])){session_destroy();header("Location:?");exit;}
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-html {padding:1em;}
-.output {letter-spacing: 1em;padding:0em;line-height:1em;margin-bottom:-0.5em; }
-span {margin-right:0.2em;}
+html {padding:1em;font-family: Tahoma, Verdana, sans-serif;}
+.output {letter-spacing: 1em;padding:0em;line-height:1em;margin-bottom:-0.5em;}
+.buchstabe {margin-right:0.2em;;}
 </style>
 </head>
 <?php
@@ -72,7 +72,7 @@ $_SESSION['gesuchtes_wort'] = trim(strtoupper($liste[mt_rand(0,count($liste)-1)]
 //echo $_SESSION['gesuchtes_wort'];
 
 $gesuchtes_wort_array = str_split($_SESSION['gesuchtes_wort']);
-$preview= '<span style="background-color:lightgreen;">'.$gesuchtes_wort_array[0].'</span><span style="background-color:lightgrey;" >-</span><span style="background-color:lightgrey;" >-</span><span style="background-color:lightgrey;" >-</span><span style="background-color:lightgrey;" >-</span>';
+$preview= '<p><button class="buchstabe" style="background-color:lightgreen;">'.$gesuchtes_wort_array[0].'</button><button class="buchstabe" style="background-color:lightgrey;" >-</button><button class="buchstabe" style="background-color:lightgrey;" >-</button><button class="buchstabe" style="background-color:lightgrey;" >-</button><button class="buchstabe" style="background-color:lightgrey;" >-</button></p>';
 
 
 if(isset($_POST['eingabe']))
@@ -89,11 +89,11 @@ if(isset($_POST['eingabe']))
 		if($buchstabe == "*")
 		{
 			$eingabe_array[$counter] = $gesuchtes_wort_array[$counter];
-			$output .=  '<span style="background-color:lightgreen;" >'.$gesuchtes_wort_array[$counter].'</span>';
+			$output .=  '<button class="buchstabe" style="background-color:lightgreen;" >'.$gesuchtes_wort_array[$counter].'</button>';
 		}
 		elseif(!in_array($buchstabe,$gesuchtes_wort_array))
 		{
-			$output .=  '<span style="background-color:lightgrey;" >'.$buchstabe.'</span>';
+			$output .=  '<button class="buchstabe" style="background-color:lightgrey;" >'.$buchstabe.'</button>';
 		}
 		else 
 		{
@@ -101,12 +101,12 @@ if(isset($_POST['eingabe']))
 		if($buchstabe == $gesuchtes_wort_array[$counter])
 		{
 			//unset($gesuchtes_wort_array[$counter]);
-			$output .= '<span style="background-color:lightgreen;">'.$buchstabe.'</span>';
+			$output .= '<button class="buchstabe" style="background-color:lightgreen;">'.$buchstabe.'</button>';
 			$anzahl++;
 			if($anzahl == strlen($_SESSION['gesuchtes_wort'])){$gewonnen="1";break;}
 		}
 		else {
-			$output .= '<span style="background-color:orange;">'.$buchstabe.'</span>';
+			$output .= '<button class="buchstabe" style="background-color:orange;">'.$buchstabe.'</button>';
 		}
 	}
 	
@@ -116,7 +116,7 @@ if(isset($gewonnen))
 {
 	echo "Wort: <b>".$_SESSION['gesuchtes_wort']."</b><br>";
 	echo 'Gewonnen!<hr>
-	<a href="?restart"><button autofocus>neues Wort</button></a>'; session_destroy();exit;
+	<a href="?restart"><span autofocus>neues Wort</span></a>'; session_destroy();exit;
 }
 
 
@@ -139,4 +139,15 @@ if(!empty($_SESSION['output'])){
 <input type="text" name="eingabe" required autofocus  minlength="5" maxlength="5">
 <button type="submit">check</button>
 </form>
-<a href="?restart"><button>neues Wort</button></a>
+<a href="?restart"><span>neues Wort</span></a>
+<hr>
+<details>
+    <summary>Hilfe (klick)</summary>
+    <div style="opacity:0.4;">
+<p><span style="background-color:lightgreen;padding:0.3em;">Buchstabe an richtiger Position</span></p>
+<p><span style="background-color:orange;padding:0.3em;">Buchstabe an falscher Position</span></p>
+<p><span style="background-color:lightgrey;padding:0.3em;">Buchstabe kommt nicht vor</span></p>
+<p>* = korrekter Buchstabe wird angezeigt</p>
+<p>- = Platzhalter möglich</p>
+</div>
+</details>
