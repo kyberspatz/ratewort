@@ -35,14 +35,14 @@ session_start();
 if(isset($_GET['restart'])){session_destroy();header("Location:?");exit;}
 ?>
 <head>
-	<title>Ratespiel</title>
+	<title>Errate die Wörter!</title>
 		<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, max-image-preview:none, notranslate" />
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 html {padding:1em;font-family: Tahoma, Verdana, sans-serif;}
 .output {letter-spacing: 1em;padding:0em;line-height:1em;margin-bottom:-0.5em;}
-.buchstabe {margin-right:0.2em;;}
+.buchstabe {margin-right:0.2em;width:2em;}
 </style>
 </head>
 <?php
@@ -73,6 +73,8 @@ $_SESSION['gesuchtes_wort'] = trim(strtoupper($liste[mt_rand(0,count($liste)-1)]
 
 $gesuchtes_wort_array = str_split($_SESSION['gesuchtes_wort']);
 $preview= '<p><button class="buchstabe" style="background-color:lightgreen;">'.$gesuchtes_wort_array[0].'</button><button class="buchstabe" style="background-color:lightgrey;" >-</button><button class="buchstabe" style="background-color:lightgrey;" >-</button><button class="buchstabe" style="background-color:lightgrey;" >-</button><button class="buchstabe" style="background-color:lightgrey;" >-</button></p>';
+
+if(isset($_GET['einfach'])){$preview= '<p><button class="buchstabe" style="background-color:lightgreen;">'.$gesuchtes_wort_array[0].'</button><button class="buchstabe" style="background-color:lightgreen;" >'.$gesuchtes_wort_array[1].'</button><button class="buchstabe" style="background-color:lightgreen;" >'.$gesuchtes_wort_array[2].'</button><button class="buchstabe" style="background-color:lightgrey;" >-</button><button class="buchstabe" style="background-color:lightgrey;" >-</button></p>';}
 
 
 if(isset($_POST['eingabe']))
@@ -116,7 +118,7 @@ if(isset($gewonnen))
 {
 	echo "Wort: <b>".$_SESSION['gesuchtes_wort']."</b><br>";
 	echo 'Gewonnen!<hr>
-	<a href="?restart"><span autofocus>neues Wort</span></a>'; session_destroy();exit;
+	<a href="?restart"><button autofocus>neues Wort</button></a>'; session_destroy();exit;
 }
 
 
